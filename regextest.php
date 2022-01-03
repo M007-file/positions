@@ -30,15 +30,14 @@ function nacti($url, $searchfor, $regex, $offset, $offsetend){
 function intodb($connection,$arrayname,$tablename,$columnname){
     foreach(array_unique($arrayname) as $arraykey=>$arrayvalue){
         $sql = "INSERT IGNORE INTO ".$tablename." (create_time, update_time, ".$columnname.") VALUES ((select current_timestamp()), (select current_timestamp()), LOWER('".$arrayvalue."'))";
-        //echo $sql.";<br />\r\n";
         $result = mysqli_query($connection, $sql);
     }
 }
 
 $conn = mysqli_connect($servername, $username, $password, $dbname); // Spojení k MySQL
-if (!$conn) { // Kontrola spojení s MySQL
+if (!$conn) { // Check of MySQL connection
   die("Connection failed: " . mysqli_connect_error());
-} else { // Připojeno k MySQL
+} else { // MySQL connected
     foreach($tabulky as $tabukey=>$tabuvalue){
         $sqlclean = "TRUNCATE ".$tabuvalue;
         $resultclean = mysqli_query($conn, $sqlclean);
@@ -59,5 +58,5 @@ if (!$conn) { // Kontrola spojení s MySQL
     }
 
     mysqli_close($conn); //uzavřít spojení do MySQL
-}// Připojeno k MySQL
+}// MySQL connected
 ?>
