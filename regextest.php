@@ -46,7 +46,7 @@ $conn = mysqli_connect($servername, $username, $password, $dbname); // MySQL con
 if (!$conn) { // Check of MySQL connection
   die("Connection failed: " . mysqli_connect_error());
 } else { // MySQL connected
-    /*$sql1 = "SELECT DISTINCT(Website) FROM sources ORDER BY RAND() LIMIT 1";// ORDER BY RAND() LIMIT 60";
+    $sql1 = "SELECT DISTINCT(Website) FROM sources ORDER BY RAND() LIMIT 1";// ORDER BY RAND() LIMIT 60";
     $resultsql1 = mysqli_query($conn, $sql1);
     if (mysqli_num_rows($resultsql1)>0) {
         while($row = mysqli_fetch_assoc($resultsql1)) { //URLs with the data in sources table at DB
@@ -65,14 +65,22 @@ if (!$conn) { // Check of MySQL connection
         $DB2 = intodb($conn,$urlarr,"sources", "Website");
         $urlarr = obtain($masterurl,"divPravy",$re,6,-1); //"href="https://www.domain.com"" - searching for HTML element class name;
         $DB3 = intodb($conn,$urlarr,"sources", "Website");
-    }*/
+    }
 
     $sql2 = "SELECT DISTINCT(Website) FROM urls ORDER BY RAND() LIMIT 60";// ORDER BY Website DESC LIMIT 10";
     $resultsql2 = mysqli_query($conn, $sql2);
     if (mysqli_num_rows($resultsql2)>0) {
         while($row2 = mysqli_fetch_assoc($resultsql2)) {
-            $mailyarr2 = obtain($row2["Website"],"mailto",$remail,13,-1); //"href="mailto:firstname.surname@domain.com"" - in general            
-            $DB4 = intodb($conn,$mailyarr2,"emaily", "email");
+            //https://www.edb.cz/firma-293315-asb-grunland-nove-hrady
+            if(substr($row2["Website"],0,25)== "https://www.edb.cz/firma-"){
+                $site = $row2["Website"]."/kontakt";
+                $mailyarr2 = obtain($site,"mailto",$remail,13,-1); //"href="mailto:firstname.surname@domain.com"" - in general
+                $DB4 = intodb($conn,$mailyarr2,"emaily", "email");
+            }else{
+                $site = $row2["Website"];
+                $mailyarr2 = obtain($site,"mailto",$remail,13,-1); //"href="mailto:firstname.surname@domain.com"" - in general
+                $DB4 = intodb($conn,$mailyarr2,"emaily", "email");
+            }       
         }
     }
     mysqli_close($conn); //close MySQL connection
